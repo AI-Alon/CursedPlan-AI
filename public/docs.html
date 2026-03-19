@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CursedPlan-AI Community Docs — Getting started, contributing, FAQ, and changelog.">
+  <title>CursedPlan-AI Docs</title>
+
+  <link rel="stylesheet" href="../src/css/base.css">
+  <link rel="stylesheet" href="../src/css/layout.css">
+  <link rel="stylesheet" href="../src/css/components.css">
+  <link rel="stylesheet" href="../src/css/animations.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11/lib/highlight.min.js"></script>
+
+  <style>
+    body { overflow-x: hidden; }
+
+    .docs-topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      background: rgba(10, 10, 20, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .docs-topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+    .docs-topbar-right { display: flex; align-items: center; gap: 1rem; }
+    .docs-topbar a { color: var(--text-2); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+    .docs-topbar a:hover { color: var(--text-1); }
+    .docs-version {
+      font-size: 0.75rem;
+      background: rgba(139,92,246,0.15);
+      border: 1px solid rgba(139,92,246,0.3);
+      border-radius: 100px;
+      padding: 2px 10px;
+      color: var(--accent);
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    }
+
+    .docs-layout {
+      display: flex;
+      padding-top: 60px;
+      min-height: 100vh;
+    }
+
+    .docs-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+      padding: 2rem 0;
+      border-right: 1px solid var(--glass-border);
+      background: rgba(10, 10, 20, 0.5);
+    }
+    .docs-sidebar::-webkit-scrollbar { width: 4px; }
+    .docs-sidebar::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
+
+    .sidebar-group { margin-bottom: 1.75rem; padding: 0 1.25rem; }
+    .sidebar-group-label {
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 0.5rem;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--r-sm);
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: background 0.15s, color 0.15s;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      margin-bottom: 2px;
+    }
+    .sidebar-link:hover { background: var(--glass); color: var(--text-1); }
+    .sidebar-link.active { background: rgba(139,92,246,0.15); color: var(--accent); }
+    .sidebar-link-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    .docs-content {
+      flex: 1;
+      min-width: 0;
+      padding: 3rem 3.5rem;
+      max-width: 820px;
+    }
+
+    .docs-section {
+      padding-top: 2rem;
+      margin-bottom: 4rem;
+      scroll-margin-top: 80px;
+    }
+
+    .docs-section-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    }
+    .docs-section h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .docs-section h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-1);
+      margin: 2rem 0 0.6rem;
+    }
+    .docs-lead {
+      font-size: 1.05rem;
+      color: var(--text-2);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    }
+    .docs-p {
+      font-size: 0.95rem;
+      color: var(--text-2);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    }
+    .docs-divider { height: 1px; background: var(--glass-border); margin: 3rem 0; }
+
+    .callout {
+      border-radius: var(--r-md);
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      border-left: 3px solid;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    }
+    .callout-icon { font-size: 1rem; margin-right: 6px; }
+    .callout.info    { background: rgba(6,182,212,0.08);  border-color: var(--accent-2); color: var(--text-2); }
+    .callout.warning { background: rgba(245,158,11,0.08); border-color: #f59e0b;         color: var(--text-2); }
+    .callout.tip     { background: rgba(139,92,246,0.08); border-color: var(--accent);   color: var(--text-2); }
+    .callout.danger  { background: rgba(239,68,68,0.08);  border-color: #ef4444;         color: var(--text-2); }
+
+    .docs-code-wrap {
+      border-radius: var(--r-md);
+      overflow: hidden;
+      margin: 1rem 0;
+      border: 1px solid var(--glass-border);
+    }
+    .docs-code-label {
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      color: var(--text-3);
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .docs-code-label .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--glass-border); }
+    .docs-code-wrap pre {
+      margin: 0;
+      padding: 1.1rem 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      background: #1a1a2e;
+    }
+
+    .docs-section code:not(.hljs) {
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.22);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.85em;
+      color: #c4b5fd;
+    }
+
+    .step-list { list-style: none; padding: 0; margin: 1rem 0; counter-reset: step-counter; }
+    .step-list li {
+      counter-increment: step-counter;
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      align-items: flex-start;
+    }
+    .step-list li::before {
+      content: counter(step-counter);
+      min-width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-list li > div {
+      font-size: 0.92rem;
+      color: var(--text-2);
+      line-height: 1.6;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    }
+    .step-list li strong { color: var(--text-1); }
+
+    .docs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.88rem;
+    }
+    .docs-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--glass);
+      color: var(--text-1);
+      border-bottom: 2px solid var(--glass-border);
+      font-weight: 700;
+    }
+    .docs-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--glass-border);
+      color: var(--text-2);
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      vertical-align: top;
+    }
+    .docs-table tr:last-child td { border-bottom: none; }
+
+    .docs-ul {
+      color: var(--text-2);
+      font-size: 0.92rem;
+      line-height: 1.9;
+      margin-bottom: 1rem;
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      padding-left: 1.5rem;
+    }
+    .docs-ul a { color: var(--accent); }
+
+    @media (max-width: 900px) {
+      .docs-sidebar { display: none; }
+      .docs-content { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-wrapper" style="min-height:100vh; background: var(--bg);">
+
+  <!-- TOP BAR -->
+  <div class="docs-topbar">
+    <div class="docs-topbar-left">
+      <a href="index.html" class="logo" style="text-decoration:none;">
+        <img src="../src/assets/logo.svg" alt="CursedPlan-AI logo" class="logo-img">
+        <span class="logo-text">CursedPlan-<span class="logo-accent">AI</span></span>
+      </a>
+      <span style="color:var(--text-3); font-size:0.85rem;">/ Docs</span>
+      <span class="docs-version">v1.0</span>
+    </div>
+    <div class="docs-topbar-right">
+      <a href="index.html">← Home</a>
+      <a href="https://github.com/AI-Alon/CursedPlan-AI" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="app.html" class="btn btn-primary btn-sm">Launch App ⚡</a>
+    </div>
+  </div>
+
+  <div class="docs-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="docs-sidebar">
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Getting Started</div>
+        <a href="#overview" class="sidebar-link">
+          <span class="sidebar-link-icon">🧠</span> What is CursedPlan-AI
+        </a>
+        <a href="#using" class="sidebar-link">
+          <span class="sidebar-link-icon">🌐</span> Using the App
+        </a>
+        <a href="#features" class="sidebar-link">
+          <span class="sidebar-link-icon">✨</span> Features
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-group-label">Community</div>
+        <a href="#contributing" class="sidebar-link">
+          <span class="sidebar-link-icon">🤝</span> Contributing
+        </a>
+        <a href="#reporting" class="sidebar-link">
+          <span class="sidebar-link-icon">🐛</span> Reporting Issues
+        </a>
+        <a href="#faq" class="sidebar-link">
+          <span class="sidebar-link-icon">❓</span> FAQ
+        </a>
+        <a href="#changelog" class="sidebar-link">
+          <span class="sidebar-link-icon">📋</span> Changelog
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="docs-content">
+
+      <!-- OVERVIEW -->
+      <section class="docs-section" id="overview">
+        <span class="docs-section-badge">Getting Started</span>
+        <h2>What is CursedPlan-AI?</h2>
+        <p class="docs-lead">
+          CursedPlan-AI is a free, open-source AI tool that turns any plain-text idea into a
+          complete software project blueprint — in seconds, straight from your browser.
+        </p>
+        <p class="docs-p">
+          Paste in your idea and CursedPlan-AI generates an architecture diagram, a step-by-step
+          development roadmap, a folder structure, starter code files, and AI-powered improvement
+          suggestions — all in one place. No account needed, no backend, no cost.
+        </p>
+        <p class="docs-p">
+          It runs entirely client-side. The only thing leaving your machine is the API call to
+          Groq (which you authorize with your own free API key). There is no CursedPlan-AI server.
+        </p>
+
+        <div class="callout tip">
+          <span class="callout-icon">💡</span>
+          <strong>Free to use:</strong> Groq's free tier for Llama 3.3-70B is more than enough
+          for dozens of project generations per day at zero cost.
+        </div>
+
+        <table class="docs-table">
+          <thead><tr><th>Tab</th><th>What you get</th></tr></thead>
+          <tbody>
+            <tr><td>📊 Plan</td><td>Tech stack, core features, project overview written by AI</td></tr>
+            <tr><td>🏗 Diagram</td><td>Architecture flowchart rendered with Mermaid.js</td></tr>
+            <tr><td>🪜 Roadmap</td><td>5-phase development plan with libraries per step</td></tr>
+            <tr><td>📂 Structure</td><td>Color-coded folder tree</td></tr>
+            <tr><td>⚡ Code</td><td>Real starter files with syntax highlighting</td></tr>
+            <tr><td>🔮 Evolution</td><td>AI suggestions for Scalability, Security, Performance, Features</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div class="docs-divider"></div>
+
+      <!-- USING THE APP -->
+      <section class="docs-section" id="using">
+        <span class="docs-section-badge">Getting Started</span>
+        <h2>Using the App</h2>
+        <p class="docs-lead">
+          CursedPlan-AI is live on GitHub Pages — no installation, no account, no API key needed. Just visit and go.
+        </p>
+        <ol class="step-list">
+          <li>
+            <div>
+              <strong>Visit the app</strong> at
+              <a href="https://ai-alon.github.io/CursedPlan-AI/" target="_blank" rel="noopener" style="color:var(--accent);">ai-alon.github.io/CursedPlan-AI</a>
+              and click <strong>⚡ Launch the Engine</strong>.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Type your idea</strong> — describe any software project you have in mind.
+              The more specific you are, the better the result.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Click ⚡ Generate Project</strong> and wait a few seconds while the AI
+              builds your full blueprint.
+            </div>
+          </li>
+        </ol>
+
+        <div class="callout info">
+          <span class="callout-icon">ℹ️</span>
+          <strong>CursedPlan-AI is free and open source.</strong> We cover the AI costs using
+          our own free Groq subscription so you don't have to set anything up. If you run into
+          an error — the community loves this tool and the free tier sometimes gets busy.
+          Wait a moment and try again. ❤️
+        </div>
+      </section>
+
+
+      <div class="docs-divider"></div>
+
+      <!-- FEATURES -->
+      <section class="docs-section" id="features">
+        <span class="docs-section-badge">Getting Started</span>
+        <h2>Features</h2>
+        <p class="docs-lead">Everything CursedPlan-AI can do out of the box:</p>
+
+        <table class="docs-table">
+          <thead><tr><th>Feature</th><th>How to use it</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Generate a project</strong></td>
+              <td>Type any idea into the textarea and click ⚡ Generate Project (or press Ctrl+Enter)</td>
+            </tr>
+            <tr>
+              <td><strong>✏️ Refine</strong></td>
+              <td>After generating, click Refine and tell the AI what to change — e.g. "Switch backend to Python"</td>
+            </tr>
+            <tr>
+              <td><strong>🔮 Evolve</strong></td>
+              <td>Get fresh AI suggestions for improving the project — runs independently, can be re-run any time</td>
+            </tr>
+            <tr>
+              <td><strong>⚡ Regenerate Code</strong></td>
+              <td>In the Code tab, regenerate starter files with more detail and depth</td>
+            </tr>
+            <tr>
+              <td><strong>📦 Export ZIP</strong></td>
+              <td>Downloads a GitHub-ready ZIP with README, LICENSE, .gitignore, CI workflow, and all code files</td>
+            </tr>
+            <tr>
+              <td><strong>📄 Plan MD</strong></td>
+              <td>Downloads the full project as a single Markdown file — paste it into any LLM to continue building</td>
+            </tr>
+            <tr>
+              <td><strong>Project History</strong></td>
+              <td>Every generated project is auto-saved locally. Click any history card to restore it</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div class="docs-divider"></div>
+
+      <!-- CONTRIBUTING -->
+      <section class="docs-section" id="contributing">
+        <span class="docs-section-badge">Community</span>
+        <h2>Contributing</h2>
+        <p class="docs-lead">
+          Contributions are very welcome — bug fixes, new features, better prompts, improved docs,
+          or even a typo fix. Every pull request matters.
+        </p>
+
+        <div class="callout tip">
+          <span class="callout-icon">💡</span>
+          First time contributing to open source? CursedPlan-AI is a great place to start.
+          It's pure vanilla JS — no build step, no framework. If you can read the code, you can contribute.
+        </div>
+
+        <h3>How to open a PR</h3>
+        <ol class="step-list">
+          <li><div><strong>Fork</strong> the repository on GitHub and clone your fork.</div></li>
+          <li>
+            <div>
+              <strong>Create a branch</strong> for your change:
+              <div class="docs-code-wrap" style="margin-top:0.5rem;">
+                <pre><code class="language-bash">git checkout -b feat/your-feature-name
+# or
+git checkout -b fix/your-bug-fix</code></pre>
+              </div>
+            </div>
+          </li>
+          <li><div><strong>Make your changes</strong> and verify them before opening the PR.</div></li>
+          <li>
+            <div>
+              <strong>Commit</strong> with a clear message. We follow
+              <a href="https://www.conventionalcommits.org/" target="_blank" rel="noopener" style="color:var(--accent);">Conventional Commits</a>:
+              <code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>chore:</code>.
+            </div>
+          </li>
+          <li><div><strong>Open a Pull Request</strong> against the <code>main</code> branch and describe what you changed and why.</div></li>
+        </ol>
+
+        <h3>What to contribute</h3>
+        <table class="docs-table">
+          <thead><tr><th>Type</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td>Bug fixes</td><td>Diagram rendering issues, JSON parsing edge cases, UI glitches</td></tr>
+            <tr><td>New features</td><td>New export formats, settings panel, keyboard shortcuts</td></tr>
+            <tr><td>Prompt improvements</td><td>Better AI prompts for higher quality output</td></tr>
+            <tr><td>UI / UX</td><td>Accessibility, mobile layout, animations</td></tr>
+            <tr><td>Docs</td><td>Clearer explanations, missing info, screenshots</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Ground rules</h3>
+        <ul class="docs-ul">
+          <li>Keep PRs focused — one change per PR is much easier to review</li>
+          <li>Test your change end-to-end before opening a PR</li>
+          <li>Don't add npm dependencies — the project intentionally has zero build tooling</li>
+          <li>Never hardcode API keys in any file that gets committed</li>
+          <li>Be respectful in reviews and discussions — this is a welcoming community</li>
+        </ul>
+
+        <div class="callout info">
+          <span class="callout-icon">ℹ️</span>
+          Not sure what to work on? Browse the
+          <a href="https://github.com/AI-Alon/CursedPlan-AI/issues" target="_blank" rel="noopener" style="color:var(--accent);">open issues</a>
+          — anything labelled <strong>good first issue</strong> is a great starting point.
+        </div>
+      </section>
+
+      <div class="docs-divider"></div>
+
+      <!-- REPORTING -->
+      <section class="docs-section" id="reporting">
+        <span class="docs-section-badge">Community</span>
+        <h2>Reporting Issues</h2>
+        <p class="docs-lead">
+          Found a bug or something that doesn't work right? Please open a GitHub issue —
+          good reports get fixed fast.
+        </p>
+
+        <h3>Before you report</h3>
+        <ul class="docs-ul">
+          <li>Check the <a href="#faq" style="color:var(--accent);">FAQ</a> below — your issue may already be covered</li>
+          <li>Search <a href="https://github.com/AI-Alon/CursedPlan-AI/issues" target="_blank" rel="noopener" style="color:var(--accent);">existing issues</a> to avoid duplicates</li>
+          <li>Make sure you're using Live Server and not opening the file via <code>file://</code></li>
+          <li>Open DevTools (F12) → Console and check for any error messages</li>
+        </ul>
+
+        <h3>What to include</h3>
+        <table class="docs-table">
+          <thead><tr><th>Field</th><th>What to write</th></tr></thead>
+          <tbody>
+            <tr><td>Summary</td><td>One sentence — what's broken</td></tr>
+            <tr><td>Steps to reproduce</td><td>Exact steps so someone else can see the same bug</td></tr>
+            <tr><td>Expected vs actual</td><td>What you expected, and what actually happened</td></tr>
+            <tr><td>Console errors</td><td>Paste any red errors from DevTools → Console</td></tr>
+            <tr><td>Browser &amp; OS</td><td>e.g. Chrome 122 on Windows 11</td></tr>
+            <tr><td>Idea text used</td><td>The project idea that triggered the bug (if AI-related)</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Suggesting a feature</h3>
+        <p class="docs-p">
+          Have an idea? Open a
+          <a href="https://github.com/AI-Alon/CursedPlan-AI/issues/new" target="_blank" rel="noopener" style="color:var(--accent);">GitHub issue</a>
+          with the <strong>enhancement</strong> label. Describe what you want and why it's useful.
+          The fastest way to get a feature added is to open a PR implementing it yourself.
+        </p>
+      </section>
+
+      <div class="docs-divider"></div>
+
+      <!-- FAQ -->
+      <section class="docs-section" id="faq">
+        <span class="docs-section-badge">Community</span>
+        <h2>FAQ</h2>
+
+        <h3>Is CursedPlan-AI free?</h3>
+        <p class="docs-p">
+          Completely free. No account, no credit card, no setup. We cover the AI costs ourselves
+          using a free Groq subscription so the community can use it without any friction.
+        </p>
+
+        <h3>Do I need to create an account or enter an API key?</h3>
+        <p class="docs-p">
+          No. Just open the app and start generating. Everything is handled for you.
+        </p>
+
+        <h3>I'm getting an error when generating</h3>
+        <p class="docs-p">
+          This usually means our free Groq subscription hit its rate limit — this happens when
+          many people are using the tool at the same time. Wait 30–60 seconds and try again.
+          If the daily limit is reached, it resets at midnight UTC.
+        </p>
+        <div class="callout tip">
+          <span class="callout-icon">❤️</span>
+          If you're hitting errors often, it means the community is loving this tool.
+          We're doing our best to keep it free and running for everyone.
+        </div>
+
+        <h3>The AI generated a bad or incomplete project</h3>
+        <p class="docs-p">
+          Try clicking <strong>✏️ Refine</strong> and describing what's wrong — e.g.
+          <em>"Give this project a better name"</em> or <em>"Add more detail to the roadmap"</em>.
+          You can also regenerate from scratch with a more specific idea description.
+        </p>
+
+        <h3>The diagram panel is blank</h3>
+        <p class="docs-p">
+          The AI occasionally returns a diagram that can't render. Click <strong>✏️ Refine</strong>
+          and ask <em>"Fix the architecture diagram"</em> to regenerate it.
+        </p>
+
+        <h3>My project history disappeared</h3>
+        <p class="docs-p">
+          History is saved in your browser's local storage. Clearing browser data or switching
+          browsers will wipe it. The app stores up to 10 projects — oldest ones are dropped automatically.
+        </p>
+
+        <h3>Can I save or share my project?</h3>
+        <p class="docs-p">
+          Yes — use <strong>📦 Export</strong> to download a full GitHub-ready ZIP, or
+          <strong>📄 Plan MD</strong> to download a Markdown file you can share or drop into
+          any LLM (ChatGPT, Claude, Gemini) to keep building.
+        </p>
+
+        <h3>Can I fork and host my own version?</h3>
+        <p class="docs-p">
+          Yes. Fork the repo on GitHub and deploy to GitHub Pages, Netlify, or Vercel.
+          See the <a href="#contributing" style="color:var(--accent);">Contributing</a> section for details.
+        </p>
+      </section>
+
+      <div class="docs-divider"></div>
+
+      <!-- CHANGELOG -->
+      <section class="docs-section" id="changelog">
+        <span class="docs-section-badge">Community</span>
+        <h2>Changelog</h2>
+        <p class="docs-lead">
+          All notable changes. Format based on
+          <a href="https://keepachangelog.com/en/1.0.0/" target="_blank" rel="noopener" style="color:var(--accent);">Keep a Changelog</a>.
+        </p>
+
+        <h3>v1.0.0 — March 2026 &nbsp;<span style="font-size:0.75rem; color:var(--accent); font-weight:400; font-family:'Comic Sans MS','Comic Sans',cursive;">Initial release</span></h3>
+
+        <ul class="docs-ul">
+          <li>Six-tab AI project generator — Plan, Diagram, Roadmap, Structure, Code, Evolution</li>
+          <li>Groq API integration with Llama 3.3-70B-Versatile (free tier)</li>
+          <li>Mermaid.js v10 architecture diagram rendering</li>
+          <li>Interactive roadmap accordion with staggered animations</li>
+          <li>Syntax-highlighted code viewer via highlight.js</li>
+          <li>✏️ Refine modal — update any part of your project with natural language</li>
+          <li>🔮 Evolution Mode — AI-generated improvement suggestions, re-runnable</li>
+          <li>⚡ Code regeneration — deeper starter files on demand</li>
+          <li>📦 GitHub-ready ZIP export — README, LICENSE, .gitignore, CI workflow, issue templates</li>
+          <li>📄 Plan MD export — full project as a Markdown doc for LLM handoff</li>
+          <li>Project history — auto-saved to localStorage, max 10 entries, per-card delete</li>
+          <li>Landing page, docs, and credits</li>
+        </ul>
+
+        <div class="callout info">
+          <span class="callout-icon">ℹ️</span>
+          Shipped something worth noting? Open a PR updating this changelog.
+        </div>
+      </section>
+
+      <div style="height: 4rem;"></div>
+    </main>
+
+  </div><!-- /docs-layout -->
+
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach((el) => {
+      hljs.highlightElement(el);
+    });
+
+    const links    = document.querySelectorAll('.sidebar-link');
+    const sections = Array.from(document.querySelectorAll('.docs-section'));
+
+    function updateActive() {
+      let current = sections[0].id;
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= 100) current = section.id;
+      }
+      links.forEach((l) => l.classList.remove('active'));
+      const active = document.querySelector(`.sidebar-link[href="#${current}"]`);
+      if (active) active.classList.add('active');
+    }
+
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+  });
+</script>
+</body>
+</html>

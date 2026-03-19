@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CursedPlan-AI — Turn any idea into a full software project in seconds, powered by AI.">
+  <title>CursedPlan-AI — AI Project Generator</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../src/css/base.css">
+  <link rel="stylesheet" href="../src/css/layout.css">
+  <link rel="stylesheet" href="../src/css/components.css">
+  <link rel="stylesheet" href="../src/css/animations.css">
+
+  <!-- highlight.js — syntax highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11/lib/highlight.min.js"></script>
+
+  <!-- JSZip — ZIP export -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
+
+  <!-- Mermaid.js — architecture diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ══════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <img src="../src/assets/logo.svg" alt="CursedPlan-AI logo" class="logo-img">
+        <span class="logo-text">CursedPlan-<span class="logo-accent">AI</span></span>
+      </a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">← Home</a>
+        <a href="#historySection" class="nav-link">History</a>
+        <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-outline btn-sm">GitHub ↗</a>
+
+        <!-- shown when logged OUT -->
+        <button id="signInBtn" class="btn btn-google btn-sm" style="display:none;">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16" height="16" alt="">
+          Sign in with Google
+        </button>
+
+        <!-- shown when logged IN -->
+        <div id="userChip" class="user-chip" style="display:none;">
+          <img id="userAvatar" class="user-avatar" src="" alt="avatar">
+          <span id="userName" class="user-name"></span>
+          <span id="dailyBadge" class="daily-badge"></span>
+          <button id="signOutBtn" class="btn btn-outline btn-sm">Sign out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════
+       HERO / INPUT
+  ══════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-glow hero-glow--1"></div>
+      <div class="hero-glow hero-glow--2"></div>
+    </div>
+
+    <div class="container">
+      <div class="hero-badge animate-in">
+        <span class="badge-dot"></span>
+        Powered by Llama 3.3 via Groq — Free Tier
+      </div>
+
+      <h1 class="hero-title animate-in-delay-1">
+        Turn Any Idea Into a<br>
+        <span class="gradient-text">Full Software Project</span>
+      </h1>
+
+      <p class="hero-subtitle animate-in-delay-2">
+        AI-powered blueprints with architecture diagrams, interactive roadmaps,<br>
+        folder structure, and starter code — generated in seconds.
+      </p>
+
+      <!-- Idea input -->
+      <div class="input-card animate-in-delay-3">
+        <div class="input-card-inner">
+          <label for="ideaInput" class="input-label">Your Project Idea</label>
+          <textarea
+            id="ideaInput"
+            class="idea-textarea"
+            placeholder="e.g. A real-time collaborative code editor with AI suggestions, user authentication, and GitHub integration..."
+            rows="4"
+            aria-label="Enter your project idea"
+          ></textarea>
+          <!-- Auth / limit notice — shown by app.js -->
+          <div id="authNotice" class="auth-notice" style="display:none;"></div>
+
+          <div class="input-actions">
+            <p class="input-hint">
+              <span>💡</span>
+              Be specific for better results | &nbsp;
+              <kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">Enter</kbd> to generate
+            </p>
+            <button id="generateBtn" class="btn btn-primary btn-generate">
+              <span class="btn-text">Generate Project</span>
+              <span>⚡</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-row animate-in-delay-4">
+        <div class="stat">
+          <span class="stat-num">Uses</span>
+          <span class="stat-label">AI to plan</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Project Types</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">Free</span>
+          <span class="stat-label">To Use</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       LOADING OVERLAY
+  ══════════════════════════════════════ -->
+  <div id="loadingOverlay" class="loading-overlay hidden" role="status" aria-live="polite">
+    <div class="loading-card">
+      <div class="loading-brain" aria-hidden="true">🧠</div>
+      <div class="loading-title">CursedPlan-AI is thinking...</div>
+
+      <div class="loading-steps">
+        <div class="loading-step" id="step1">
+          <span class="step-dot"></span>
+          Analyzing your idea
+        </div>
+        <div class="loading-step" id="step2">
+          <span class="step-dot"></span>
+          Building project blueprint
+        </div>
+        <div class="loading-step" id="step3">
+          <span class="step-dot"></span>
+          Generating architecture &amp; roadmap
+        </div>
+        <div class="loading-step" id="step4">
+          <span class="step-dot"></span>
+          Creating starter code
+        </div>
+      </div>
+
+      <div class="loading-bar-wrapper">
+        <div class="loading-bar" id="loadingBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       OUTPUT SECTION
+  ══════════════════════════════════════ -->
+  <section id="outputSection" class="output-section hidden">
+    <div class="container">
+
+      <!-- Project header -->
+      <div class="project-header">
+        <div class="project-meta">
+          <h2 class="project-name" id="projectName">Project Name</h2>
+          <p class="project-desc" id="projectDesc">Description</p>
+          <div class="project-tags" id="projectTags"></div>
+        </div>
+        <div class="project-actions">
+          <button class="btn btn-outline" id="refineBtn" title="Refine with AI feedback">
+            ✏️ Refine
+          </button>
+          <button class="btn btn-outline" id="evolveBtn" title="AI Evolution Mode">
+            🔮 Evolve
+          </button>
+          <button class="btn btn-outline" id="exportBtn" title="Export to GitHub">
+            📦 Export
+          </button>
+          <button class="btn btn-primary" id="newProjectBtn">
+            ⚡ New Project
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="plan"      role="tab" aria-selected="true">  <span class="tab-icon">📊</span> Plan      </button>
+        <button class="tab"        data-tab="diagram"   role="tab" aria-selected="false"> <span class="tab-icon">🏗</span>  Diagram   </button>
+        <button class="tab"        data-tab="roadmap"   role="tab" aria-selected="false"> <span class="tab-icon">🪜</span> Roadmap   </button>
+        <button class="tab"        data-tab="structure" role="tab" aria-selected="false"> <span class="tab-icon">📂</span> Structure </button>
+        <button class="tab"        data-tab="code"      role="tab" aria-selected="false"> <span class="tab-icon">⚡</span> Code      </button>
+        <button class="tab"        data-tab="evolution" role="tab" aria-selected="false"> <span class="tab-icon">🔮</span> Evolution </button>
+      </div>
+
+      <!-- Tab panels -->
+      <div class="tab-panels">
+
+        <!-- PLAN -->
+        <div class="tab-panel active" id="panel-plan" role="tabpanel">
+          <div class="panel-grid">
+            <div class="info-card">
+              <h3 class="card-title">Tech Stack</h3>
+              <div id="techStack" class="tag-list"></div>
+            </div>
+            <div class="info-card">
+              <h3 class="card-title">Core Features</h3>
+              <ul id="featureList" class="feature-list"></ul>
+            </div>
+            <div class="info-card full-width">
+              <h3 class="card-title">Project Overview</h3>
+              <p id="projectOverview" class="overview-text"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DIAGRAM -->
+        <div class="tab-panel" id="panel-diagram" role="tabpanel">
+          <div class="diagram-card">
+            <div class="diagram-header">
+              <span>Architecture Diagram (Mermaid.js)</span>
+              <button class="btn btn-sm btn-outline" id="copyDiagramBtn">Copy Mermaid</button>
+            </div>
+            <div id="mermaidDiagram" class="mermaid-container">
+              <!-- Rendered by app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ROADMAP -->
+        <div class="tab-panel" id="panel-roadmap" role="tabpanel">
+          <div id="roadmapContainer" class="roadmap-container">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+
+        <!-- STRUCTURE -->
+        <div class="tab-panel" id="panel-structure" role="tabpanel">
+          <div class="structure-card">
+            <div class="structure-header">
+              <span>📂 Project Folder Structure</span>
+              <button class="btn btn-sm btn-outline" id="copyStructureBtn">Copy</button>
+            </div>
+            <pre id="folderStructure" class="folder-tree"></pre>
+          </div>
+        </div>
+
+        <!-- CODE -->
+        <div class="tab-panel" id="panel-code" role="tabpanel">
+          <div class="code-panel-header">
+            <span>Starter Code Files</span>
+            <button class="btn btn-sm btn-outline" id="regenCodeBtn">⚡ Regenerate Code</button>
+          </div>
+          <div class="code-viewer">
+            <div class="code-sidebar" id="fileList">
+              <!-- File list rendered by app.js -->
+            </div>
+            <div class="code-main">
+              <div class="code-file-header" id="codeFileHeader">Select a file</div>
+              <pre class="code-block"><code id="codeContent">// Select a file from the sidebar to view its content</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- EVOLUTION -->
+        <div class="tab-panel" id="panel-evolution" role="tabpanel">
+          <div class="evolution-panel-header">
+            <span>AI Evolution Suggestions</span>
+            <button class="btn btn-sm btn-outline" id="reevolveBtn">🔮 Re-Evolve with AI</button>
+          </div>
+          <div id="evolutionContainer" class="evolution-container">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+
+      </div><!-- /tab-panels -->
+    </div><!-- /container -->
+  </section>
+
+  <!-- ══════════════════════════════════════
+       HISTORY
+  ══════════════════════════════════════ -->
+  <section class="history-section" id="historySection">
+    <div class="container">
+      <div class="history-header">
+        <h3 class="section-title">📋 Project History</h3>
+        <button class="btn btn-sm btn-outline" id="clearHistoryBtn">Clear All</button>
+      </div>
+      <div id="historyGrid" class="history-grid">
+        <div class="history-empty">
+          <span class="history-empty-icon">🧠</span>
+          <p>No projects yet. Generate your first one above!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-text">CursedPlan-<span class="logo-accent">AI</span></span>
+          <p>Turn ideas into software projects with AI.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#">Docs</a>
+          <a href="#">GitHub</a>
+          <a href="#">Report Issue</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        Built with ❤️ using Llama 3.3 via Groq &nbsp;·&nbsp; CursedPlan-AI v1.0
+        built by AI-Alon, 3-15-2026
+      </div>
+    </div>
+  </footer>
+
+
+</div><!-- /app-wrapper -->
+
+<!-- App JS (Phase 1 — UI + mock data) -->
+<script src="../src/js/app.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap');
+
+/* ============================================================
+   BASE — CSS Variables, Reset, Typography
+   ============================================================ */
+
+:root {
+  /* Backgrounds */
+  --bg-primary:    #07070f;
+  --bg-secondary:  #0c0c1a;
+  --bg-tertiary:   #111128;
+
+  /* Glass surfaces */
+  --glass:         rgba(255,255,255,0.04);
+  --glass-md:      rgba(255,255,255,0.07);
+  --glass-border:  rgba(255,255,255,0.08);
+  --glass-border-hover: rgba(255,255,255,0.16);
+
+  /* Brand colors */
+  --purple:        #7c3aed;
+  --purple-light:  #a855f7;
+  --purple-dim:    rgba(124,58,237,0.15);
+  --cyan:          #06b6d4;
+  --cyan-light:    #22d3ee;
+  --cyan-dim:      rgba(6,182,212,0.15);
+  --green:         #10b981;
+  --yellow:        #f59e0b;
+  --red:           #ef4444;
+
+  /* Text */
+  --text-1: #f8fafc;
+  --text-2: #cbd5e1;
+  --text-3: #64748b;
+  --text-4: #334155;
+
+  /* Border radius */
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   14px;
+  --r-xl:   20px;
+  --r-2xl:  28px;
+  --r-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm:     0 1px 4px rgba(0,0,0,0.4);
+  --shadow-md:     0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg:     0 8px 32px rgba(0,0,0,0.6);
+  --shadow-purple: 0 0 40px rgba(124,58,237,0.2);
+  --shadow-cyan:   0 0 40px rgba(6,182,212,0.15);
+
+  /* Transitions */
+  --transition:    200ms ease;
+  --transition-md: 350ms ease;
+
+  /* Fonts */
+  --font:      'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+
+  /* Layout */
+  --header-h: 64px;
+}
+
+/* ─── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg-primary);
+  color: var(--text-1);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a    { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
+textarea, input, select { font-family: inherit; color: inherit; }
+img, svg { display: block; max-width: 100%; }
+ul, ol   { list-style: none; }
+
+/* ─── Utilities ──────────────────────────────────────────────── */
+.hidden   { display: none !important; }
+.sr-only  { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+/* ─── Container ──────────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--purple); border-radius: var(--r-full); }
+
+/* ─── Text selection ─────────────────────────────────────────── */
+::selection { background: var(--purple-dim); color: var(--purple-light); }
+
+/* ─── Comic Sans for all detail / body text ──────────────────── */
+.hero-subtitle,
+.stat-label,
+.hero-badge,
+.input-hint,
+.input-label,
+.project-desc,
+.overview-text,
+.step-subtitle,
+.step-description,
+.feature-list li,
+.evolution-desc,
+.evolution-category,
+.loading-title,
+.loading-step,
+.folder-tree,
+.history-empty p,
+.history-card-name,
+.history-card-date,
+.footer-brand p,
+.footer-bottom,
+.footer-links a,
+.nav-link,
+.tab,
+.card-title,
+.lib-tag,
+.tech-tag,
+.tag,
+.diagram-header,
+.structure-header,
+.code-file-header,
+.file-item,
+.step-number {
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+}
