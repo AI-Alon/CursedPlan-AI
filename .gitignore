@@ -1,6 +1,5 @@
 # API keys — never commit
 src/js/config.js
-src/js/firebase-config.js
 
 # OS
 .DS_Store
